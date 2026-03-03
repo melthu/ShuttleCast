@@ -24,6 +24,40 @@ bwfML/
 └── CLAUDE.md
 ```
 
+# BWF Quantitative Model: Phase 4 - Deep History & Neural Challenger
+
+## Phase 4.1: Deep Data (2010 - 2026)
+1. **Scraper Update:** Modify the scraper to pull matches from Jan 1, 2010. 
+2. **Granular Stats:** Capture game scores (e.g., 21-15) and calculate 'Point Differential' and 'Total Points (Fatigue)' features.
+
+## Phase 4.2: The Neural Challenger (DeepFM / TabNet)
+1. **Model Implementation:** Use PyTorch to implement a DeepFM or TabNet model.
+2. **Comparison:** Benchmark the neural network against the XGBoost champion on the full 2010-2026 dataset.
+3. **SHAP Integration:** Use `shap.Explainer` (Kernel or Deep explainer) to interpret the neural network's decisions if it becomes the new champion.
+
+## Phase 4.3: Analytical Dashboard
+1. **SHAP Waterfall:** Add a "Match Analysis" tab to `app.py` showing feature contributions.
+2. **Win Probability Distribution:** Show how the probability shifted over the player's last 5 matches.
+
+
+# Spec: `app.py` (Phase 3.5: SHAP Interpretability)
+
+## 1. Context & Objective
+Upgrade the Streamlit dashboard to include a "Matchup Explainer" tab using the `shap` library. This will allow the user to select any two players from the bracket and visualize the exact feature contributions for that specific matchup.
+
+## 2. Implementation Logic
+1. **Dependencies**: Ensure `shap` and `matplotlib` are imported. Streamlit sometimes requires a wrapper like `st.pyplot()` to render SHAP plots.
+2. **UI Update**: Wrap the main dashboard into two tabs: `st.tabs(["Monte Carlo Bracket", "Matchup Explainer"])`.
+3. **The Explainer Tab**:
+   * Create two selectboxes for the user to choose `Player A` and `Player B` from the current tournament's roster.
+   * Add a "Analyze Matchup" button.
+4. **SHAP Integration**:
+   * When the button is clicked, build the exact 20-feature input array for that matchup using the `build_time_zero_state` logic.
+   * Initialize a SHAP explainer for the saved XGBoost model: `explainer = shap.TreeExplainer(model)`.
+   * Calculate the SHAP values for that specific 1D feature array: `shap_values = explainer(feature_array)`.
+   * Generate a `shap.plots.waterfall(shap_values[0])` to visually show how the base expected value was pushed up or down by specific features (Elo, fatigue, form, etc.).
+   * Render the matplotlib figure in Streamlit using `st.pyplot()`.
+
 # BWF Quantitative Prediction Model Autonomous Upgrade Plan
 
 ## Phase 1: Feature Engineering & Model Search (Max Alpha)

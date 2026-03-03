@@ -40,6 +40,27 @@ bwfML/
 
 ---
 
+# Spec: `app.py` (Phase 5: Point-in-Time Dashboard & UX)
+
+## 1. Context & Objective
+Upgrade the Streamlit dashboard to function as a Point-in-Time Historical Backtester with an interactive UI, real-time loading states, and a "Reality Check" actual-results overlay.
+
+## 2. Implementation Logic
+1. **Dynamic Point-in-Time Engine:**
+   * Allow the user to select *any* tournament from the dataset.
+   * When a tournament is selected, filter the master dataset to only include rows where `start_date < tournament_start_date`.
+   * Rapidly train a fresh model (or use strictly pre-calculated Point-in-Time features) on this subset to guarantee zero future data leakage.
+2. **Interactive Loading States (`st.status`):**
+   * Wrap the execution block in `with st.status("Running Point-in-Time Engine...", expanded=True) as status:`.
+   * Add `st.write()` steps inside to show progress: "Slicing historical data...", "Training Point-in-Time model...", "Running 10,000 Monte Carlo simulations...".
+   * Change the status to complete when finished.
+3. **The "Reality Check" Overlay:**
+   * Query the dataset to find the actual winner of the selected tournament.
+   * Add a column to the Monte Carlo probability leaderboard called `Actual Result`. 
+   * Place a gold medal emoji (🥇) or "Winner" text next to the player who actually won, so users can visually backtest the model's accuracy.
+4. **Tale of the Tape (Matchup Tab):**
+   * In the SHAP Explainer tab, render a side-by-side comparison of the two selected players' Point-in-Time stats (Current Elo, Fatigue, Win Streak) *before* rendering the SHAP waterfall plot.
+
 ## Pipeline
 
 | Step | Script | Output |

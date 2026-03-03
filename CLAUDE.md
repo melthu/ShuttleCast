@@ -40,6 +40,19 @@ bwfML/
 
 ---
 
+# Spec: `app.py` (UI Upgrade: National Flags)
+
+## 1. Context & Objective
+Upgrade the Streamlit dashboard (`app.py`) to display national flag emojis next to player names to improve the visual UX.
+
+## 2. Implementation Logic
+1. **The Flag Dictionary:** Create a helper dictionary `PLAYER_FLAGS` at the top of `app.py` mapping the top ~40 BWF Men's Singles players to their country's emoji flag. 
+   * *Examples:* 'Viktor Axelsen': '🇩🇰', 'Shi Yuqi': '🇨🇳', 'Anders Antonsen': '🇩🇰', 'Jonatan Christie': '🇮🇩', 'Anthony Sinisuka Ginting': '🇮🇩', 'Kodai Naraoka': '🇯🇵', 'Kunlavut Vitidsarn': '🇹🇭', 'Li Shifeng': '🇨🇳', 'Chou Tien-chen': '🇹🇼', 'Lee Zii Jia': '🇲🇾', 'Loh Kean Yew': '🇸🇬', 'Prannoy H. S.': '🇮🇳', 'Lakshya Sen': '🇮🇳', 'Toma Junior Popov': '🇫🇷', 'Christo Popov': '🇫🇷', 'Kento Momota': '🇯🇵'.
+2. **The Helper Function:** Create a function `def format_name(player_name):` that looks up the player in the dictionary. If found, return `f"{flag} {player_name}"`. If not found, return `f"🏸 {player_name}"` as a fallback.
+3. **UI Integration:** * Update the **Leaderboard DataFrame**: Apply this formatting function to the 'Player' column before rendering it.
+   * Update the **First Round Bracket**: Format the player names in the bracket view.
+   * Update the **SHAP Explainer Tab**: Ensure the selection dropdowns and the "Tale of the Tape" headers display the flags alongside the names.
+
 # Spec: `app.py` (Phase 5: Point-in-Time Dashboard & UX)
 
 ## 1. Context & Objective
